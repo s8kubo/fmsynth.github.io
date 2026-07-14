@@ -1,0 +1,31 @@
+body{
+    background:#111;
+    color:white;
+    font-family:sans-serif;
+    width:600px;
+    margin:40px auto;
+}
+
+h1{
+    text-align:center;
+}
+
+.control{
+    margin:20px 0;
+}
+
+label{
+    display:block;
+    margin-bottom:8px;
+}
+
+input[type="range"]{
+    width:100%;
+}
+
+button{
+    width:120px;
+    height:40px;
+    margin:20px 10px 0 0;
+    font-size:16px;
+}
