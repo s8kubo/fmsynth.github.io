@@ -1,31 +1,38 @@
+
 body{
+
     background:#111;
     color:white;
     font-family:sans-serif;
-    width:600px;
-    margin:40px auto;
-}
 
-h1{
-    text-align:center;
+    width:500px;
+    margin:40px auto;
+
 }
 
 .control{
-    margin:20px 0;
+
+    margin-bottom:25px;
+
 }
 
 label{
+
     display:block;
     margin-bottom:8px;
+
 }
 
-input[type="range"]{
+input{
+
     width:100%;
+
 }
 
 button{
-    width:120px;
+
+    width:100px;
     height:40px;
-    margin:20px 10px 0 0;
-    font-size:16px;
+    margin-right:10px;
+
 }
