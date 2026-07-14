@@ -1,102 +1,78 @@
 let audio;
 
-let carrier;
-let mod;
+let carrierOsc;
+let modOsc;
 let modGain;
 
-let lfo;
-let lfoGain;
+let playing = false;
 
-let playing=false;
 
-function createSynth(){
+// HTML取得
 
-    audio=new AudioContext();
+const carrierSlider = document.getElementById("carrier");
+const modSlider = document.getElementById("mod");
+const depthSlider = document.getElementById("depth");
 
-    carrier=audio.createOscillator();
-    mod=audio.createOscillator();
+const carrierValue = document.getElementById("carrierValue");
+const modValue = document.getElementById("modValue");
+const depthValue = document.getElementById("depthValue");
 
-    modGain=audio.createGain();
 
-    lfo=audio.createOscillator();
-    lfoGain=audio.createGain();
-
-    const output=audio.createGain();
-
-    output.gain.value=0.15;
-
-    // FM
-    mod.connect(modGain);
-    modGain.connect(carrier.frequency);
-
-    // Vibrato
-    lfo.connect(lfoGain);
-    lfoGain.connect(carrier.frequency);
-
-    carrier.connect(output);
-    output.connect(audio.destination);
-
-    updateValues();
-
-    carrier.start();
-    mod.start();
-    lfo.start();
-}
+// 値更新
 
 function updateValues(){
 
-    let freq=parseFloat(freqSlider.value);
-    let ratio=parseFloat(ratioSlider.value);
-    let index=parseFloat(indexSlider.value);
-    let lfoRate=parseFloat(lfoSlider.value);
+    carrierValue.textContent = carrierSlider.value;
+    modValue.textContent = modSlider.value;
+    depthValue.textContent = depthSlider.value;
 
-    carrier.frequency.value=freq;
+    if(!playing) return;
 
-    mod.frequency.value=freq*ratio;
+    carrierOsc.frequency.value =
+        carrierSlider.value;
 
-    // Index
-    modGain.gain.value=index*100;
+    modOsc.frequency.value =
+        modSlider.value;
 
-    // Vibrato
-    lfo.frequency.value=lfoRate;
-    lfoGain.gain.value=5;
-
-}
-
-const freqSlider=document.getElementById("freq");
-const ratioSlider=document.getElementById("ratio");
-const indexSlider=document.getElementById("index");
-const lfoSlider=document.getElementById("lfo");
-
-freqSlider.oninput=updateValues;
-ratioSlider.oninput=updateValues;
-indexSlider.oninput=updateValues;
-lfoSlider.oninput=updateValues;
-
-document.getElementById("play").onclick=()=>{
-
-    if(!playing){
-
-        createSynth();
-
-        playing=true;
-
-    }
+    modGain.gain.value =
+        depthSlider.value;
 
 }
 
-document.getElementById("stop").onclick=()=>{
 
-    if(playing){
+// シンセ作成
 
-        carrier.stop();
-        mod.stop();
-        lfo.stop();
+function createSynth(){
 
-        audio.close();
+    audio = new AudioContext();
 
-        playing=false;
+    carrierOsc =
+        audio.createOscillator();
 
-    }
+    modOsc =
+        audio.createOscillator();
+
+    modGain =
+        audio.createGain();
+
+
+    // FM
+
+    modOsc.connect(modGain);
+
+    modGain.connect(
+        carrierOsc.frequency
+    );
+
+
+    carrierOsc.connect(
+        audio.destination
+    );
+
+    updateValues();
+
+    carrierOsc.start();
+
+    modOsc.start();
 
 }
