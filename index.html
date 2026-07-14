@@ -1,53 +1,64 @@
-<h1>Body12 FM Synth</h1>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>FM Synth Demo</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>FM Synth</h1>
 
 <div class="control">
-  <label>Frequency</label>
-  <input id="freq" type="range"
-         min="50" max="2000"
-         value="220">
-  <span id="freqValue">220</span>
+
+<label>Carrier Frequency</label>
+
+<input
+id="carrier"
+type="range"
+min="50"
+max="1000"
+value="220">
+
+<span id="carrierValue">220</span>
+
 </div>
 
 <div class="control">
-  <label>Index</label>
-  <input id="index" type="range"
-         min="0" max="20"
-         step="0.1"
-         value="2">
+
+<label>Modulator Frequency</label>
+
+<input
+id="mod"
+type="range"
+min="0"
+max="1000"
+value="220">
+
+<span id="modValue">220</span>
+
 </div>
 
 <div class="control">
-  <label>Ratio</label>
-  <input id="ratio" type="range"
-         min="0.25"
-         max="8"
-         step="0.01"
-         value="2">
+
+<label>Mod Depth</label>
+
+<input
+id="depth"
+type="range"
+min="0"
+max="1000"
+value="100">
+
+<span id="depthValue">100</span>
+
 </div>
 
-<div class="control">
-  <label>LFO</label>
-  <input id="lfo"
-         type="range"
-         min="0"
-         max="25"
-         step="0.1"
-         value="0">
-</div>
+<button id="play">Play</button>
+<button id="stop">Stop</button>
 
-<div class="control">
-  <label>FreqShift</label>
-  <input id="shift"
-         type="range"
-         min="-3000"
-         max="3000"
-         value="0">
-</div>
+<script src="script.js"></script>
 
-<button id="play">
-Play
-</button>
-
-<button id="stop">
-Stop
-</button>
+</body>
+</html>
