@@ -76,3 +76,48 @@ function createSynth(){
     modOsc.start();
 
 }
+
+// PLAY
+
+document
+.getElementById("play")
+.onclick=()=>{
+
+    if(playing) return;
+
+    createSynth();
+
+    playing=true;
+
+};
+
+
+// STOP
+
+document
+.getElementById("stop")
+.onclick=()=>{
+
+    if(!playing) return;
+
+    carrierOsc.stop();
+
+    modOsc.stop();
+
+    audio.close();
+
+    playing=false;
+
+};
+
+
+// スライダー
+
+carrierSlider.oninput =
+updateValues;
+
+modSlider.oninput =
+updateValues;
+
+depthSlider.oninput =
+updateValues;
