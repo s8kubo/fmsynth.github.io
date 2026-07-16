@@ -153,8 +153,10 @@ button:hover {
   color: white;
 }
 
-button:focus-visible,
-input:focus-visible {
-  outline: 1px solid black;
-  outline-offset: 3px;
+input[type="range"]:focus{
+    outline:none;
+}
+
+input[type="range"]:focus-visible{
+    outline:none;
 }
