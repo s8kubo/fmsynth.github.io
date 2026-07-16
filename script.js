@@ -192,17 +192,17 @@ async function startSynth() {
 
     isPlaying = true;
 
-    elements.playButton.textContent = "STOP";
+    elements.playButton.textContent = "stop";
     elements.playButton.classList.add("playing");
 
-    elements.status.textContent = "PLAYING";
+    elements.status.textContent = "playing";
     elements.status.classList.add("playing");
 
     drawOscilloscope();
   } catch (error) {
     console.error(error);
 
-    elements.status.textContent = "ERROR";
+    elements.status.textContent = "error";
 
     window.alert(
       error instanceof Error
@@ -265,10 +265,10 @@ function stopSynth() {
 
   isPlaying = false;
 
-  elements.playButton.textContent = "START";
+  elements.playButton.textContent = "start";
   elements.playButton.classList.remove("playing");
 
-  elements.status.textContent = "STOPPED";
+  elements.status.textContent = "stopped";
   elements.status.classList.remove("playing");
 
   drawIdleCanvas();
