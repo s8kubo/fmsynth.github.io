@@ -223,8 +223,15 @@ function drawWaveform() {
     const x =
       index * sliceWidth;
 
-    const y =
-      normalized * height / 2;
+    
+    const centered =
+  normalized - 1;
+
+const amplitude =
+  height * 0.42;
+
+const y =
+  height / 2 + centered * amplitude;
 
     if (index === 0) {
       canvasContext.moveTo(x, y);
