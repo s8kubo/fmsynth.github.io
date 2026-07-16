@@ -1,9 +1,5 @@
 "use strict";
 
-/*
- * UI
- */
-
 const carrierFrequency =
   document.querySelector("#carrier-frequency");
 
@@ -22,14 +18,14 @@ const modulationDepth =
 const modulationDepthValue =
   document.querySelector("#modulation-depth-value");
 
-const carrierWaveButtons =
+const carrierWaveRadios =
   document.querySelectorAll(
-    "#carrier-wave-buttons .wave"
+    'input[name="carrier-wave"]'
   );
 
-const modulatorWaveButtons =
+const modulatorWaveRadios =
   document.querySelectorAll(
-    "#modulator-wave-buttons .wave"
+    'input[name="modulator-wave"]'
   );
 
 const playButton =
@@ -40,11 +36,6 @@ const canvas =
 
 const canvasContext =
   canvas.getContext("2d");
-
-
-/*
- * 音声ノード
- */
 
 let audioContext = null;
 
@@ -60,18 +51,9 @@ let animationFrameId = null;
 
 let isPlaying = false;
 
-
-/*
- * 現在選ばれている波形
- */
-
 let carrierWaveType = "sine";
 let modulatorWaveType = "sine";
 
-
-/*
- * 数値表示
- */
 
 function updateValues() {
   carrierFrequencyValue.textContent =
@@ -84,10 +66,6 @@ function updateValues() {
     `${Number(modulationDepth.value).toFixed(0)} Hz`;
 }
 
-
-/*
- * AudioContext
- */
 
 function createAudioContext() {
   const AudioContextClass =
@@ -104,10 +82,6 @@ function createAudioContext() {
 }
 
 
-/*
- * 値を滑らかに変更する
- */
-
 function setSmoothly(audioParameter, value) {
   if (!audioContext || !audioParameter) {
     return;
@@ -116,6 +90,7 @@ function setSmoothly(audioParameter, value) {
   const now = audioContext.currentTime;
 
   audioParameter.cancelScheduledValues(now);
+
   audioParameter.setTargetAtTime(
     value,
     now,
@@ -123,10 +98,6 @@ function setSmoothly(audioParameter, value) {
   );
 }
 
-
-/*
- * Canvas
- */
 
 function resizeCanvas() {
   const pixelRatio =
@@ -266,24 +237,6 @@ function drawWaveform() {
 }
 
 
-/*
- * シンセを作る
- *
- * modulator
- *   ↓
- * modulationGain
- *   ↓
- * carrier.frequency
- *
- * carrier
- *   ↓
- * masterGain
- *   ↓
- * analyser
- *   ↓
- * speakers
- */
-
 function buildSynth() {
   carrierOscillator =
     audioContext.createOscillator();
@@ -300,13 +253,11 @@ function buildSynth() {
   analyser =
     audioContext.createAnalyser();
 
-
   carrierOscillator.type =
     carrierWaveType;
 
   carrierOscillator.frequency.value =
     Number(carrierFrequency.value);
-
 
   modulatorOscillator.type =
     modulatorWaveType;
@@ -314,24 +265,15 @@ function buildSynth() {
   modulatorOscillator.frequency.value =
     Number(modulatorFrequency.value);
 
-
   modulationGain.gain.value =
     Number(modulationDepth.value);
 
-
-  /*
-   * 音量は固定。
-   * 大きすぎるとFMは簡単に凶器になる。
-   */
-
   masterGain.gain.value = 0.08;
-
 
   analyser.fftSize = 2048;
 
   waveformData =
     new Uint8Array(analyser.fftSize);
-
 
   modulatorOscillator.connect(
     modulationGain
@@ -340,7 +282,6 @@ function buildSynth() {
   modulationGain.connect(
     carrierOscillator.frequency
   );
-
 
   carrierOscillator.connect(
     masterGain
@@ -354,15 +295,10 @@ function buildSynth() {
     audioContext.destination
   );
 
-
   carrierOscillator.start();
   modulatorOscillator.start();
 }
 
-
-/*
- * 再生
- */
 
 async function startSynth() {
   try {
@@ -394,10 +330,6 @@ async function startSynth() {
   }
 }
 
-
-/*
- * 停止
- */
 
 function stopSynth() {
   if (!isPlaying) {
@@ -454,33 +386,11 @@ async function toggleSynth() {
 }
 
 
-/*
- * 波形ボタン
- */
-
-function setActiveWaveButton(
-  buttons,
-  selectedButton
-) {
-  buttons.forEach((button) => {
-    button.classList.remove("active");
-  });
-
-  selectedButton.classList.add("active");
-}
-
-
-carrierWaveButtons.forEach((button) => {
-  button.addEventListener(
-    "click",
+carrierWaveRadios.forEach((radio) => {
+  radio.addEventListener(
+    "change",
     () => {
-      carrierWaveType =
-        button.dataset.wave;
-
-      setActiveWaveButton(
-        carrierWaveButtons,
-        button
-      );
+      carrierWaveType = radio.value;
 
       if (carrierOscillator) {
         carrierOscillator.type =
@@ -491,17 +401,11 @@ carrierWaveButtons.forEach((button) => {
 });
 
 
-modulatorWaveButtons.forEach((button) => {
-  button.addEventListener(
-    "click",
+modulatorWaveRadios.forEach((radio) => {
+  radio.addEventListener(
+    "change",
     () => {
-      modulatorWaveType =
-        button.dataset.wave;
-
-      setActiveWaveButton(
-        modulatorWaveButtons,
-        button
-      );
+      modulatorWaveType = radio.value;
 
       if (modulatorOscillator) {
         modulatorOscillator.type =
@@ -511,10 +415,6 @@ modulatorWaveButtons.forEach((button) => {
   );
 });
 
-
-/*
- * スライダー
- */
 
 carrierFrequency.addEventListener(
   "input",
@@ -561,19 +461,11 @@ modulationDepth.addEventListener(
 );
 
 
-/*
- * 再生ボタン
- */
-
 playButton.addEventListener(
   "click",
   toggleSynth
 );
 
-
-/*
- * 画面サイズ変更
- */
 
 window.addEventListener(
   "resize",
@@ -585,10 +477,6 @@ window.addEventListener(
 );
 
 
-/*
- * ページを閉じる
- */
-
 window.addEventListener(
   "beforeunload",
   () => {
@@ -598,10 +486,6 @@ window.addEventListener(
   }
 );
 
-
-/*
- * 初期化
- */
 
 updateValues();
 drawIdleWave();
