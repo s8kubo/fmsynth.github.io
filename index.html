@@ -1,168 +1,40 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+<p class="wave-group">
 
-  <title>FM</title>
-
-  <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-  <main>
-    <h1>FM</h1>
-
-    <canvas
-      id="oscilloscope"
-      width="800"
-      height="180"
-      aria-label="FM変調後の波形"
-    ></canvas>
-
-    <section>
-      <h2>carrier</h2>
-
-      <div class="control">
-        <output id="carrier-frequency-value">
-          220 Hz
-        </output>
-
-        <input
-          id="carrier-frequency"
-          type="range"
-          min="20"
-          max="2000"
-          value="220"
-          step="1"
-          aria-label="carrier frequency"
-        >
-      </div>
-
-      <div
-    class="wave-buttons"
-    id="carrier-wave"
->
-
-    <button
-        class="wave active"
-        data-wave="sine"
+  <label>
+    <input
+      type="radio"
+      name="carrier-wave"
+      value="sine"
+      checked
     >
-        sin
-    </button>
+    sin
+  </label>
 
-    <button
-        class="wave"
-        data-wave="triangle"
+  <label>
+    <input
+      type="radio"
+      name="carrier-wave"
+      value="triangle"
     >
-        tri
-    </button>
+    tri
+  </label>
 
-    <button
-        class="wave"
-        data-wave="sawtooth"
+  <label>
+    <input
+      type="radio"
+      name="carrier-wave"
+      value="sawtooth"
     >
-        saw
-    </button>
+    saw
+  </label>
 
-    <button
-        class="wave"
-        data-wave="square"
+  <label>
+    <input
+      type="radio"
+      name="carrier-wave"
+      value="square"
     >
-        sqr
-    </button>
+    sqr
+  </label>
 
-</div>
-    </section>
-
-    <section>
-      <h2>modulator</h2>
-
-      <div class="control">
-        <output id="modulator-frequency-value">
-          110.0 Hz
-        </output>
-
-        <input
-          id="modulator-frequency"
-          type="range"
-          min="0.1"
-          max="2000"
-          value="110"
-          step="0.1"
-          aria-label="modulator frequency"
-        >
-      </div>
-
-      <div
-    class="wave-buttons"
-    id="carrier-wave"
->
-
-    <button
-        class="wave active"
-        data-wave="sine"
-    >
-        sin
-    </button>
-
-    <button
-        class="wave"
-        data-wave="triangle"
-    >
-        tri
-    </button>
-
-    <button
-        class="wave"
-        data-wave="sawtooth"
-    >
-        saw
-    </button>
-
-    <button
-        class="wave"
-        data-wave="square"
-    >
-        sqr
-    </button>
-
-</div>
-    </section>
-
-    <section>
-      <h2>depth</h2>
-
-      <div class="control">
-        <output id="modulation-depth-value">
-          220 Hz
-        </output>
-
-        <input
-          id="modulation-depth"
-          type="range"
-          min="0"
-          max="3000"
-          value="220"
-          step="1"
-          aria-label="modulation depth"
-        >
-      </div>
-    </section>
-
-    <section>
-      <button
-        id="play-button"
-        type="button"
-      >
-        start
-      </button>
-    </section>
-  </main>
-
-  <script src="script.js"></script>
-</body>
-</html>
+</p>
