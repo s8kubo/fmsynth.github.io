@@ -1,13 +1,14 @@
 "use strict";
 
+/*
+ * UI
+ */
+
 const carrierFrequency =
   document.querySelector("#carrier-frequency");
 
 const carrierFrequencyValue =
   document.querySelector("#carrier-frequency-value");
-
-const carrierWave =
-  document.querySelector("#carrier-wave");
 
 const modulatorFrequency =
   document.querySelector("#modulator-frequency");
@@ -15,14 +16,21 @@ const modulatorFrequency =
 const modulatorFrequencyValue =
   document.querySelector("#modulator-frequency-value");
 
-const modulatorWave =
-  document.querySelector("#modulator-wave");
-
 const modulationDepth =
   document.querySelector("#modulation-depth");
 
 const modulationDepthValue =
   document.querySelector("#modulation-depth-value");
+
+const carrierWaveButtons =
+  document.querySelectorAll(
+    "#carrier-wave-buttons .wave"
+  );
+
+const modulatorWaveButtons =
+  document.querySelectorAll(
+    "#modulator-wave-buttons .wave"
+  );
 
 const playButton =
   document.querySelector("#play-button");
@@ -33,16 +41,37 @@ const canvas =
 const canvasContext =
   canvas.getContext("2d");
 
+
+/*
+ * 音声ノード
+ */
+
 let audioContext = null;
+
 let carrierOscillator = null;
 let modulatorOscillator = null;
+
 let modulationGain = null;
 let masterGain = null;
 let analyser = null;
 
 let waveformData = null;
 let animationFrameId = null;
+
 let isPlaying = false;
+
+
+/*
+ * 現在選ばれている波形
+ */
+
+let carrierWaveType = "sine";
+let modulatorWaveType = "sine";
+
+
+/*
+ * 数値表示
+ */
 
 function updateValues() {
   carrierFrequencyValue.textContent =
@@ -55,9 +84,15 @@ function updateValues() {
     `${Number(modulationDepth.value).toFixed(0)} Hz`;
 }
 
+
+/*
+ * AudioContext
+ */
+
 function createAudioContext() {
   const AudioContextClass =
-    window.AudioContext || window.webkitAudioContext;
+    window.AudioContext ||
+    window.webkitAudioContext;
 
   if (!AudioContextClass) {
     throw new Error(
@@ -68,6 +103,11 @@ function createAudioContext() {
   return new AudioContextClass();
 }
 
+
+/*
+ * 値を滑らかに変更する
+ */
+
 function setSmoothly(audioParameter, value) {
   if (!audioContext || !audioParameter) {
     return;
@@ -76,24 +116,39 @@ function setSmoothly(audioParameter, value) {
   const now = audioContext.currentTime;
 
   audioParameter.cancelScheduledValues(now);
-  audioParameter.setTargetAtTime(value, now, 0.01);
+  audioParameter.setTargetAtTime(
+    value,
+    now,
+    0.01
+  );
 }
+
+
+/*
+ * Canvas
+ */
 
 function resizeCanvas() {
   const pixelRatio =
     window.devicePixelRatio || 1;
 
-  const width =
+  const displayedWidth =
     canvas.clientWidth;
 
-  const height =
+  const displayedHeight =
     canvas.clientHeight;
 
   const internalWidth =
-    Math.floor(width * pixelRatio);
+    Math.max(
+      1,
+      Math.floor(displayedWidth * pixelRatio)
+    );
 
   const internalHeight =
-    Math.floor(height * pixelRatio);
+    Math.max(
+      1,
+      Math.floor(displayedHeight * pixelRatio)
+    );
 
   if (
     canvas.width !== internalWidth ||
@@ -113,6 +168,7 @@ function resizeCanvas() {
   );
 }
 
+
 function clearCanvas() {
   resizeCanvas();
 
@@ -123,6 +179,7 @@ function clearCanvas() {
     canvas.clientHeight
   );
 }
+
 
 function drawIdleWave() {
   clearCanvas();
@@ -135,6 +192,7 @@ function drawIdleWave() {
 
   canvasContext.strokeStyle = "#000";
   canvasContext.lineWidth = 1;
+
   canvasContext.beginPath();
 
   canvasContext.moveTo(
@@ -149,6 +207,7 @@ function drawIdleWave() {
 
   canvasContext.stroke();
 }
+
 
 function drawWaveform() {
   if (
@@ -176,6 +235,7 @@ function drawWaveform() {
 
   canvasContext.strokeStyle = "#000";
   canvasContext.lineWidth = 1;
+
   canvasContext.beginPath();
 
   const sliceWidth =
@@ -205,6 +265,25 @@ function drawWaveform() {
   canvasContext.stroke();
 }
 
+
+/*
+ * シンセを作る
+ *
+ * modulator
+ *   ↓
+ * modulationGain
+ *   ↓
+ * carrier.frequency
+ *
+ * carrier
+ *   ↓
+ * masterGain
+ *   ↓
+ * analyser
+ *   ↓
+ * speakers
+ */
+
 function buildSynth() {
   carrierOscillator =
     audioContext.createOscillator();
@@ -221,31 +300,38 @@ function buildSynth() {
   analyser =
     audioContext.createAnalyser();
 
+
   carrierOscillator.type =
-    carrierWave.value;
+    carrierWaveType;
 
   carrierOscillator.frequency.value =
     Number(carrierFrequency.value);
 
+
   modulatorOscillator.type =
-    modulatorWave.value;
+    modulatorWaveType;
 
   modulatorOscillator.frequency.value =
     Number(modulatorFrequency.value);
 
+
   modulationGain.gain.value =
     Number(modulationDepth.value);
 
+
   /*
    * 音量は固定。
-   * UIからは変更しない。
+   * 大きすぎるとFMは簡単に凶器になる。
    */
+
   masterGain.gain.value = 0.08;
+
 
   analyser.fftSize = 2048;
 
   waveformData =
     new Uint8Array(analyser.fftSize);
+
 
   modulatorOscillator.connect(
     modulationGain
@@ -254,6 +340,7 @@ function buildSynth() {
   modulationGain.connect(
     carrierOscillator.frequency
   );
+
 
   carrierOscillator.connect(
     masterGain
@@ -267,9 +354,15 @@ function buildSynth() {
     audioContext.destination
   );
 
+
   carrierOscillator.start();
   modulatorOscillator.start();
 }
+
+
+/*
+ * 再生
+ */
 
 async function startSynth() {
   try {
@@ -301,26 +394,15 @@ async function startSynth() {
   }
 }
 
+
+/*
+ * 停止
+ */
+
 function stopSynth() {
   if (!isPlaying) {
     return;
   }
-
-  carrierOscillator.stop();
-  modulatorOscillator.stop();
-
-  carrierOscillator.disconnect();
-  modulatorOscillator.disconnect();
-  modulationGain.disconnect();
-  masterGain.disconnect();
-  analyser.disconnect();
-
-  carrierOscillator = null;
-  modulatorOscillator = null;
-  modulationGain = null;
-  masterGain = null;
-  analyser = null;
-  waveformData = null;
 
   if (animationFrameId !== null) {
     cancelAnimationFrame(
@@ -330,11 +412,38 @@ function stopSynth() {
     animationFrameId = null;
   }
 
+  try {
+    carrierOscillator.stop();
+    modulatorOscillator.stop();
+
+    carrierOscillator.disconnect();
+    modulatorOscillator.disconnect();
+
+    modulationGain.disconnect();
+    masterGain.disconnect();
+    analyser.disconnect();
+  } catch (error) {
+    console.warn(
+      "音声ノードの停止に失敗しました。",
+      error
+    );
+  }
+
+  carrierOscillator = null;
+  modulatorOscillator = null;
+
+  modulationGain = null;
+  masterGain = null;
+  analyser = null;
+
+  waveformData = null;
+
   isPlaying = false;
   playButton.textContent = "start";
 
   drawIdleWave();
 }
+
 
 async function toggleSynth() {
   if (isPlaying) {
@@ -344,10 +453,68 @@ async function toggleSynth() {
   }
 }
 
-playButton.addEventListener(
-  "click",
-  toggleSynth
-);
+
+/*
+ * 波形ボタン
+ */
+
+function setActiveWaveButton(
+  buttons,
+  selectedButton
+) {
+  buttons.forEach((button) => {
+    button.classList.remove("active");
+  });
+
+  selectedButton.classList.add("active");
+}
+
+
+carrierWaveButtons.forEach((button) => {
+  button.addEventListener(
+    "click",
+    () => {
+      carrierWaveType =
+        button.dataset.wave;
+
+      setActiveWaveButton(
+        carrierWaveButtons,
+        button
+      );
+
+      if (carrierOscillator) {
+        carrierOscillator.type =
+          carrierWaveType;
+      }
+    }
+  );
+});
+
+
+modulatorWaveButtons.forEach((button) => {
+  button.addEventListener(
+    "click",
+    () => {
+      modulatorWaveType =
+        button.dataset.wave;
+
+      setActiveWaveButton(
+        modulatorWaveButtons,
+        button
+      );
+
+      if (modulatorOscillator) {
+        modulatorOscillator.type =
+          modulatorWaveType;
+      }
+    }
+  );
+});
+
+
+/*
+ * スライダー
+ */
 
 carrierFrequency.addEventListener(
   "input",
@@ -363,6 +530,7 @@ carrierFrequency.addEventListener(
   }
 );
 
+
 modulatorFrequency.addEventListener(
   "input",
   () => {
@@ -376,6 +544,7 @@ modulatorFrequency.addEventListener(
     }
   }
 );
+
 
 modulationDepth.addEventListener(
   "input",
@@ -391,25 +560,20 @@ modulationDepth.addEventListener(
   }
 );
 
-carrierWave.addEventListener(
-  "change",
-  () => {
-    if (carrierOscillator) {
-      carrierOscillator.type =
-        carrierWave.value;
-    }
-  }
+
+/*
+ * 再生ボタン
+ */
+
+playButton.addEventListener(
+  "click",
+  toggleSynth
 );
 
-modulatorWave.addEventListener(
-  "change",
-  () => {
-    if (modulatorOscillator) {
-      modulatorOscillator.type =
-        modulatorWave.value;
-    }
-  }
-);
+
+/*
+ * 画面サイズ変更
+ */
 
 window.addEventListener(
   "resize",
@@ -420,6 +584,11 @@ window.addEventListener(
   }
 );
 
+
+/*
+ * ページを閉じる
+ */
+
 window.addEventListener(
   "beforeunload",
   () => {
@@ -428,6 +597,11 @@ window.addEventListener(
     }
   }
 );
+
+
+/*
+ * 初期化
+ */
 
 updateValues();
 drawIdleWave();
