@@ -7,8 +7,8 @@ body {
   margin: 0 auto;
   padding: 20px;
 
-  background: white;
-  color: black;
+  background: #fff;
+  color: #000;
 
   font-family:
     "MS Gothic",
@@ -45,8 +45,8 @@ canvas {
   display: block;
   width: 100%;
   height: 70px;
-  margin: 1em 0 2em;
-  background: white;
+  margin: 0.5em 0 1.5em;
+  background: #fff;
 }
 
 output {
@@ -60,58 +60,93 @@ input {
   font: inherit;
 }
 
-/* slider */
+/* range */
 
 input[type="range"] {
   display: block;
   width: 100%;
-  height: 12px;
+  height: 20px;
   margin: 0;
-
-  appearance: none;
-  -webkit-appearance: none;
-
-  background: transparent;
-  cursor: pointer;
-}
-
-input[type="range"]::-webkit-slider-runnable-track {
-  height: 1px;
-  background: black;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-  width: 6px;
-  height: 6px;
-  margin-top: -2.5px;
+  padding: 0;
 
   appearance: none;
   -webkit-appearance: none;
 
   border: 0;
-  border-radius: 50%;
+  outline: 0;
+  background: transparent;
 
-  background: black;
+  cursor: pointer;
 }
 
-input[type="range"]::-moz-range-track {
+input[type="range"]:focus,
+input[type="range"]:focus-visible,
+input[type="range"]:active {
+  border: 0;
+  outline: 0;
+  background: transparent;
+}
+
+/* Chrome / Edge / Safari */
+
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
   height: 1px;
-  background: black;
+
+  border: 0;
+  border-radius: 0;
+
+  background: #000;
+}
+
+input[type="range"]:focus::-webkit-slider-runnable-track,
+input[type="range"]:active::-webkit-slider-runnable-track {
+  height: 1px;
+  background: #000;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  width: 16px;
+  height: 16px;
+  margin-top: -7.5px;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  border: 5px solid #fff;
+  border-radius: 50%;
+
+  background: #000;
+}
+
+/* Firefox */
+
+input[type="range"]::-moz-range-track {
+  width: 100%;
+  height: 1px;
+
+  border: 0;
+  border-radius: 0;
+
+  background: #000;
 }
 
 input[type="range"]::-moz-range-progress {
   height: 1px;
-  background: black;
+
+  border: 0;
+
+  background: #000;
 }
 
 input[type="range"]::-moz-range-thumb {
   width: 6px;
   height: 6px;
 
-  border: 0;
+  border: 5px solid #fff;
   border-radius: 50%;
 
-  background: black;
+  background: #000;
 }
 
 /* radio */
@@ -130,7 +165,7 @@ input[type="range"]::-moz-range-thumb {
 
 .wave-group input[type="radio"] {
   margin: 0 0.2em 0 0;
-  accent-color: black;
+  accent-color: #000;
 }
 
 /* start / stop */
@@ -139,22 +174,21 @@ button {
   margin: 0;
   padding: 0.15em 0.6em;
 
-  border: 1px solid black;
+  border: 1px solid #000;
   border-radius: 0;
 
-  background: white;
-  color: black;
+  background: #fff;
+  color: #000;
 
   cursor: pointer;
 }
 
 button:hover {
-  background: black;
-  color: white;
+  background: #000;
+  color: #fff;
 }
 
-button:focus-visible,
-input:focus-visible {
-  outline: 1px solid black;
+button:focus-visible {
+  outline: 1px solid #000;
   outline-offset: 3px;
 }
