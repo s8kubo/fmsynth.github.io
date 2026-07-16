@@ -2,7 +2,6 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-
   <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
@@ -17,14 +16,17 @@
   <main>
     <h1>FM</h1>
 
+    <canvas
+      id="oscilloscope"
+      width="800"
+      height="180"
+      aria-label="FM変調後の波形"
+    ></canvas>
+
     <section>
       <h2>carrier</h2>
 
-      <p class="control">
-        <label for="carrier-frequency">
-          frequency
-        </label>
-
+      <div class="control">
         <output id="carrier-frequency-value">
           220 Hz
         </output>
@@ -36,31 +38,25 @@
           max="2000"
           value="220"
           step="1"
+          aria-label="carrier frequency"
         >
-      </p>
+      </div>
 
-      <p class="control">
-        <label for="carrier-wave">
-          waveform
-        </label>
-
-        <select id="carrier-wave">
-          <option value="sine">sine</option>
-          <option value="triangle">triangle</option>
-          <option value="sawtooth">sawtooth</option>
-          <option value="square">square</option>
-        </select>
-      </p>
+      <select
+        id="carrier-wave"
+        aria-label="carrier waveform"
+      >
+        <option value="sine">sine</option>
+        <option value="triangle">triangle</option>
+        <option value="sawtooth">sawtooth</option>
+        <option value="square">square</option>
+      </select>
     </section>
 
     <section>
       <h2>modulator</h2>
 
-      <p class="control">
-        <label for="modulator-frequency">
-          frequency
-        </label>
-
+      <div class="control">
         <output id="modulator-frequency-value">
           110.0 Hz
         </output>
@@ -72,27 +68,25 @@
           max="2000"
           value="110"
           step="0.1"
+          aria-label="modulator frequency"
         >
-      </p>
+      </div>
 
-      <p class="control">
-        <label for="modulator-wave">
-          waveform
-        </label>
+      <select
+        id="modulator-wave"
+        aria-label="modulator waveform"
+      >
+        <option value="sine">sine</option>
+        <option value="triangle">triangle</option>
+        <option value="sawtooth">sawtooth</option>
+        <option value="square">square</option>
+      </select>
+    </section>
 
-        <select id="modulator-wave">
-          <option value="sine">sine</option>
-          <option value="triangle">triangle</option>
-          <option value="sawtooth">sawtooth</option>
-          <option value="square">square</option>
-        </select>
-      </p>
+    <section>
+      <h2>depth</h2>
 
-      <p class="control">
-        <label for="modulation-depth">
-          depth
-        </label>
-
+      <div class="control">
         <output id="modulation-depth-value">
           220 Hz
         </output>
@@ -104,56 +98,18 @@
           max="3000"
           value="220"
           step="1"
+          aria-label="modulation depth"
         >
-      </p>
+      </div>
     </section>
 
     <section>
-      <h2>output</h2>
-
-      <p class="control">
-        <label for="volume">
-          volume
-        </label>
-
-        <output id="volume-value">
-          10%
-        </output>
-
-        <input
-          id="volume"
-          type="range"
-          min="0"
-          max="0.25"
-          value="0.1"
-          step="0.001"
-        >
-      </p>
-
-      <p>
-        <button
-          id="play-button"
-          type="button"
-        >
-          start
-        </button>
-      </p>
-
-      <p
-        id="status"
-        aria-live="polite"
+      <button
+        id="play-button"
+        type="button"
       >
-        stopped
-      </p>
-    </section>
-
-    <section>
-      <canvas
-        id="oscilloscope"
-        width="1200"
-        height="360"
-        aria-label="FM変調後の波形"
-      ></canvas>
+        start
+      </button>
     </section>
   </main>
 
