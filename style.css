@@ -1,43 +1,160 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
-    max-width: 40em;
-    margin: 0 auto;
-    padding: 20px;
+  max-width: 40em;
+  margin: 0 auto;
+  padding: 20px;
 
-    font-family: "MS Gothic","MS Mincho",monospace;
-    line-height: 1.8;
+  background: white;
+  color: black;
+
+  font-family:
+    "MS Gothic",
+    "MS Mincho",
+    monospace;
+
+  line-height: 1.8;
 }
 
-section{
-    margin:1em 0;
+main {
+  width: 100%;
 }
 
-h1{
-    font-size:1.2em;
-    font-weight:normal;
-    margin:0;
+h1,
+h2 {
+  font-weight: normal;
 }
 
-h2{
-    font-size:1em;
-    font-weight:normal;
-    margin:0 0 .2em;
+h1 {
+  margin: 0;
+  font-size: 1.2em;
 }
 
-output{
-    display:block;
-    margin:0;
+h2 {
+  margin: 0 0 0.25em;
+  font-size: 1em;
 }
 
-canvas{
-    display:block;
-    width:100%;
-    height:120px;
-    margin:1em 0 2em;
+section {
+  margin: 1.5em 0;
 }
 
-wave.active{
-    text-decoration:underline;
+canvas {
+  display: block;
+  width: 100%;
+  height: 120px;
+  margin: 1em 0 2em;
+  background: white;
 }
 
+output {
+  display: block;
+  margin: 0;
+  font-size: 0.9em;
+}
 
+button,
+input {
+  font: inherit;
+}
 
+/* slider */
+
+input[type="range"] {
+  display: block;
+  width: 100%;
+  height: 12px;
+  margin: 0;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 1px;
+  background: black;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  width: 6px;
+  height: 6px;
+  margin-top: -2.5px;
+
+  appearance: none;
+  -webkit-appearance: none;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: black;
+}
+
+input[type="range"]::-moz-range-track {
+  height: 1px;
+  background: black;
+}
+
+input[type="range"]::-moz-range-progress {
+  height: 1px;
+  background: black;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 6px;
+  height: 6px;
+
+  border: 0;
+  border-radius: 50%;
+
+  background: black;
+}
+
+/* radio */
+
+.wave-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  margin-top: 0.4em;
+}
+
+.wave-group label {
+  cursor: pointer;
+  user-select: none;
+}
+
+.wave-group input[type="radio"] {
+  margin: 0 0.2em 0 0;
+  accent-color: black;
+}
+
+/* start / stop */
+
+button {
+  margin: 0;
+  padding: 0.15em 0.6em;
+
+  border: 1px solid black;
+  border-radius: 0;
+
+  background: white;
+  color: black;
+
+  cursor: pointer;
+}
+
+button:hover {
+  background: black;
+  color: white;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 1px solid black;
+  outline-offset: 3px;
+}
