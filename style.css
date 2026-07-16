@@ -80,10 +80,17 @@ input[type="range"]::-webkit-slider-runnable-track {
   background: black;
 }
 
-input[type="range"]::-webkit-slider-thumb {
-  width: 6px;
-  height: 6px;
-  margin-top: -2.5px;
+input[type="range"]{
+    height:20px;
+}::-webkit-slider-thumb{
+    width:14px;
+    height:14px;
+
+    margin-top:-6.5px;
+
+    background:black;
+    border-radius:50%;
+}
 
   appearance: none;
   -webkit-appearance: none;
